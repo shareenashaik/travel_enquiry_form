@@ -1,0 +1,254 @@
+<%= form_with(model: user, local: true) do |form| %>
+  <% if user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
+
+      <ul>
+        <% user.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="row">
+    <div class="col">
+      <p>Please use a pen, and write neatly in English using BLOCK LETTERS.</p>
+      <p>Tick where applicable <%= check_box_tag '', 'true', true, :disabled => true  %></p>
+      <%= nested_form_for(user) do |f| %>
+        <%= f.fields_for :stay_details do |sub_form| %>
+          <div class="form-group row">
+            <div class="col-1">1</div>
+            <div class="col-10">
+              <p> Indicate if you are applying outside Australia or in Australia: </p>
+              <p> OutSide Australia <%= check_box_tag :outside_resident%> <b> Go to Question 2</b></p>
+              <p> In Australia <%= check_box_tag :resident%><b>Go to Question 5</b></p>
+            </div>
+          </div>
+      
+          <p><b> Applicants outside Australia</b></p>
+          <div class="form-group row">
+            <div class="col-1">2</div>
+            <div class="col-10">
+              When do you wish visit to Australia?
+              <div class="form-group row">
+                <label class="col-sm-1">Date</label>
+                <div class="col-sm-10">
+                  From <%= sub_form.date_field :from_date, as: :date%> To <%= sub_form.date_field :to_date, as: :date%> 
+                </div>
+              </div>
+            </div>
+          </div>
+        
+          <div class="form-group row">
+            <div class="col-1">3</div>
+            <div class="col-10">
+              How long do you wish to stay in Australia?
+              <ul>
+                <% User::STAY_OPTIONS.each_with_index do |status, index| %>
+                  <li> <%= form.check_box :duration, value: index %> <%= status %> </li>
+                <% end %>
+              </ul>
+              <p> <b>Note:</b> The stay period granted may be less than the period requested. You should check the terms of any visa granted.</p>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-1">4</div>
+            <div class="col-10">
+              Do you intend to enter Australia on more than one occasion?
+              <ul>
+                <li> No <%= check_box_tag 'no_interest_to_visit' %> <b> Go to Question 7</b></li>
+                <li> Yes <%= check_box_tag 'interest_to_visit' %> Give details</li>
+              </ul>
+              <%= form.text_area :interest_details, size: "50x10" %>
+            </div>
+          </div>
+
+          <p><b>Applicants in Australia</b></p>
+          <div class="form-group row">
+            <div class="col-1">5</div>
+            <div class="col-10">
+              Specify the date you wish to extend your stay to
+              <p> <%= sub_form.date_field :extend_date, as: :date%> </p>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-1">6</div>
+            <div class="col-10">
+              Provide detailed reasons for requesting this further stay
+              <%= form.text_area :reason_for_extension, size: "50x10" %>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+    <div class="col">
+      Upload image
+      <h4> Part A - Your details </h4>
+      <div class="form-group row">
+        <div class="col-1">7</div>
+        <div class="col-10">
+          <div class="form-group row">
+            Give the following details exactly as they appear in your passport
+            Make sure your passport is valid for the period of stay you are applying for.
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-3">Family name</label>
+            <div class="col-sm-7">
+              <%= form.text_field :family_name %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-3">Given names</label>
+            <div class="col-sm-7">
+              <%= form.text_field :given_names %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-3">Sex</label>
+            <div class="col-sm-7">
+              <%= form.radio_button :gender, 'male' %> Male
+              <%= form.radio_button :gender, 'female' %> female
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-3">Date of birth</label>
+            <div class="col-sm-7">
+              <%= form.date_field :dob, as: :date%> 
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-3">Passport number</label>
+            <div class="col-sm-7">
+              <%= form.text_field :passport_number %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-3">Country of Passport</label>
+            <div class="col-sm-7">
+              <%= form.text_field :country %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-3">Nationality of Passport holder</label>
+            <div class="col-sm-7">
+              <%= form.text_field :nationality %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-3">Date of issue</label>
+            <div class="col-sm-7">
+              <%= form.date_field :issue_date, as: :date%> 
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-3">Date of Expiry</label>
+            <div class="col-sm-7">
+              <%= form.date_field :expiry, as: :date%> 
+            </div>
+          </div>
+
+           <div class="form-group row">
+            <label class="col-sm-3">Place of issue/issuing authority</label>
+            <div class="col-sm-7">
+              <%= form.text_field :given_names %>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-1">8</div>
+        <div class="col-10">
+          <div class="form-group row">
+            Place of Birth
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-3">Town/city</label>
+            <div class="col-sm-7">
+              <%= form.text_field :city %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-3">State/province</label>
+            <div class="col-sm-7">
+              <%= form.text_field :state %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-3">Country</label>
+            <div class="col-sm-7">
+              <%= form.text_field :country %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="form-group row">
+        <div class="col-1">9</div>
+        <div class="col-10">
+          <div class="form-group row">
+            Relationship Status
+          </div>
+
+          <div class="form-group row statuses">
+            <ul>
+              <% User::STAUSES.each_with_index do |status, index| %>
+                <li> <%= form.check_box :relationship_status, value: index %> <%= status %> </li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="actions">
+    <%= form.submit%>
+  </div>
+<% end %>
+
+
+<script type="text/javascript">
+  $("#outside_resident").change(function(){
+    if(this.checked) {
+      $("#user_stay_details_from_date").focus();
+      $('#resident').attr("checked", false);
+    }
+  });
+
+  $("#no_interest_to_visit").change(function(){
+    if(this.checked) {
+      $("#user_family_name").focus();
+      $("#interest_to_visit").attr('checked', false);
+    }
+  });
+
+  $("#interest_to_visit").click(function(){
+    if(this.checked) {
+      $("#user_interest_details").focus();
+      $("#no_interest_to_visit").attr('checked', false);
+    }
+  });
+
+  $("#resident").change(function(){
+    if(this.checked) {
+      $("#user_stay_details_extend_date").focus();
+      $('#outside_resident').attr("checked", false);
+    }
+  });
+</script>
